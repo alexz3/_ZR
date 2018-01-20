@@ -1,4 +1,5 @@
 import argparse
+import glob
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
 from pyspark.sql import Window
@@ -9,9 +10,14 @@ def parse_args():
     argumentParser = argparse.ArgumentParser()
     #input parameters
     argumentParser.add_argument("-i", "--inputFiles", help="Location of input stream files", default="./", type=str)
-    #general parameters
+    argumentParser.add_argument("-poi", "--poiFiles", help="CSV locations of Path Of Interest file", default=None, type=str)
+    #output parameters
+    argumentParser.add_argument("-printHeader", "--printHeader", help="print header in the beginning of output files", default=False, action="store_true")
+    argumentParser.add_argument("-partitions", "--partitions", help="Repartition each outut to defined number of partitions", default=None, type=int)
+    #run settings parameters
     argumentParser.add_argument("-debug", "--debug", help="Should print debug info", default=False, action="store_true")
     argumentParser.add_argument("-printInfo", "--printInfo", help="Should print INFO level messages", default=False, action="store_true")    
+    
     return argumentParser.parse_args()
 
 def extractTopConvertingUsers(df, n):  
@@ -19,7 +25,7 @@ def extractTopConvertingUsers(df, n):
     .groupBy('user_id')\
     .count()\
     .sort(fn.desc('count'))\
-    .take(n)  
+    .limit(n)  
 
 def minConversion(path):
     i=0
@@ -90,7 +96,9 @@ def main():
     
     #Get num conversions per user
     top10ConvertingUsers = extractTopConvertingUsers(df, 10)
-    print top10ConvertingUsers
+    if arguments.debug:
+        print top10ConvertingUsers
+    writeDataframe('q1_top10ConvertingUsers', top10ConvertingUsers, arguments.printHeader, arguments.partitions)
     
     #sessionize
     #TODO translate type to numbers so that start session will precede other actions
@@ -106,17 +114,30 @@ def main():
     if arguments.debug:
         print lineno()
         convertionDistancePerUser.show(100)
-    
+    writeDataframe('q2_conversionDistancePerUser', convertionDistancePerUser, arguments.printHeader, arguments.partitions)
     avgConvserionDistance = convertionDistancePerUser.agg(fn.avg('conversion_distance').alias('avg_converting_distance'))
+    writeDataframe('q3_avgConversionDistance', avgConvserionDistance, arguments.printHeader, arguments.partitions)
     
+    if arguments.poiFiles is not None:
+        global pathOfInterest
+        for poiPath in arguments.poiFiles.split(','):
+            if arguments.debug:
+                print 'Processing path ', poiPath
+            for filePath in glob.glob(poiPath):
+                if arguments.debug:
+                    print 'Processing file ', filePath
+                pathOfInterest = readFileToList(filePath)
+                patternMatchingUsers = extractUsersMatchingPath(dfSessionized)
+                if arguments.debug:
+                    print lineno()
+                    patternMatchingUsers.show()
+                writeDataframe('q4_patternMatchingUsers/'+filePath, patternMatchingUsers, arguments.printHeader, arguments.partitions)
+    
+                
     #Get users matching path of urls
-    global pathOfInterest
-    pathOfInterest = ['/jobs','/jobs/fujifilm-26978f85/software-engineering-intern-temporary-d040c9c4']
-    patternMatchingUsers = extractUsersMatchingPath(dfSessionized)
-    if arguments.debug:
-        print lineno()
-        patternMatchingUsers.show()
-
+    
+    
+    
     #print summary
 
 
