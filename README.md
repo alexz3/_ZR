@@ -1,17 +1,17 @@
 # _ZR
 
-##Running the system
+## Running the system
 _/Applications/anaconda/bin/spark-submit stream_analyze.py -i ../data/file2.txt -debug -partitions 1 -poi "../input/poi*.txt"_
 
 From within the pyspark folder
 
-##Running unit tests
-python test/test_stream_analyze.py 
+## Running unit tests
+_python test/test_stream_analyze.py _
 
-##Interesting stuff
+## Interesting stuff
 Can read multiple POI (path of interest) files (according to pattern for matching files) and creates a list of user matching each of the POI
 
-Options
+### Options
 usage: stream_analyze.py [-h] [-i INPUTFILES] [-poi POIFILES] [-printHeader]
                          [-partitions PARTITIONS] [-debug] [-printInfo]
 
