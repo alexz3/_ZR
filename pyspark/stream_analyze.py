@@ -76,7 +76,7 @@ global pathOfInterest
 
 def init(arguments):
     #get context
-    spark = SparkSession.builder.appName("PythonPi").getOrCreate()
+    spark = SparkSession.builder.appName("PythonZR").getOrCreate()
     if not arguments.printInfo:
         quietLogs(spark)
     return spark
@@ -127,16 +127,12 @@ def main():
                 if arguments.debug:
                     print 'Processing file ', filePath
                 pathOfInterest = readFileToList(filePath)
+                #Get users matching path of urls
                 patternMatchingUsers = extractUsersMatchingPath(dfSessionized)
                 if arguments.debug:
                     print lineno()
                     patternMatchingUsers.show()
                 writeDataframe('q4_patternMatchingUsers/'+filePath, patternMatchingUsers, arguments.printHeader, arguments.partitions)
-    
-                
-    #Get users matching path of urls
-    
-    
     
     #print summary
 
