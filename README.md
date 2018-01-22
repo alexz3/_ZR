@@ -6,7 +6,7 @@ _/Applications/anaconda/bin/spark-submit stream_analyze.py -i ../data/file2.txt 
 From within the pyspark folder
 
 ## Running unit tests
-_python test/test_stream_analyze.py _
+_python test/test_stream_analyze.py_
 
 ## Interesting stuff
 Can read multiple POI (path of interest) files (according to pattern for matching files) and creates a list of user matching each of the POI
