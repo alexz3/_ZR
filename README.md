@@ -1,6 +1,6 @@
 # _ZR
 
-*Running the system*
+_Running the system_
 /Applications/anaconda/bin/spark-submit stream_analyze.py -i ../data/file2.txt -debug -partitions 1 -poi "../input/poi*.txt"
 
 From within the pyspark folder
