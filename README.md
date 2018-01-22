@@ -18,13 +18,13 @@ usage: stream_analyze.py [-h] [-i INPUTFILES] [-poi POIFILES] [-printHeader]
 #### optional arguments:
 ####  -h, --help            show this help message and exit
 ####  -i INPUTFILES, --inputFiles INPUTFILES
-####                        Location of input stream files
+                        Location of input stream files
 ####  -poi POIFILES, --poiFiles POIFILES
-####                        CSV locations of Path Of Interest files
+                        CSV locations of Path Of Interest files
 ####  -printHeader, --printHeader
-####                        print header in the beginning of output files
+                        print header in the beginning of output files
 ####  -partitions PARTITIONS, --partitions PARTITIONS
-####                        Repartition each outut to defined number of partitions
+                        Repartition each outut to defined number of partitions
 ####  -debug, --debug       Should print debug info
 ####  -printInfo, --printInfo
-####                        Should print INFO level messages
+                        Should print INFO level messages
